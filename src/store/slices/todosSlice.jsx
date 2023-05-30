@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   todos: [],
-  //   count: 0,
+  filtering: "all",
 };
 
 const todosSlice = createSlice({
@@ -17,18 +17,28 @@ const todosSlice = createSlice({
       };
 
       state.todos.push(todo);
-      //   state.count += 1;
     },
     removeTodo: (state, { payload }) => {
       state.todos = state.todos.filter((todo) => todo.id !== payload);
-      //   state.count -= 1;
     },
     toggleTodo: (state, { payload }) => {
-      state.todos[payload].completed = !state.todos[payload].completed;
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === payload) {
+          todo.completed = !todo.completed;
+        }
+        return todo;
+      });
+    },
+    clearCompleted: (state) => {
+      state.todos = state.todos.filter((todo) => todo.completed === false);
+    },
+    setFiltering: (state, { payload }) => {
+      state.filtering = payload;
     },
   },
 });
 
-export const { addTodo, removeTodo, toggleTodo } = todosSlice.actions;
+export const { addTodo, removeTodo, toggleTodo, clearCompleted, setFiltering } =
+  todosSlice.actions;
 
 export default todosSlice.reducer;

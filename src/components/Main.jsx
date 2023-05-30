@@ -2,7 +2,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeTodo, toggleTodo } from "../store/slices/todosSlice";
 
 function Main() {
-  const { todos } = useSelector((state) => state.todosReducer);
+  const { todos, filtering } = useSelector((state) => state.todosReducer);
+
+  const getTodos = () => {
+    return todos.filter((todo) => {
+      if (filtering === "active") {
+        return todo.completed === false;
+      } else if (filtering === "completed") {
+        return todo.completed === true;
+      } else {
+        return todo;
+      }
+    });
+  };
 
   const dispatch = useDispatch();
 
@@ -14,8 +26,6 @@ function Main() {
     dispatch(toggleTodo(index));
   };
 
-  console.log(todos);
-
   return (
     <>
       <section className="main">
@@ -24,43 +34,24 @@ function Main() {
 
         <ul className="todo-list">
           {todos &&
-            todos.map((todo) => (
+            getTodos().map((todo) => (
               <li
                 key={todo.id}
                 onClick={() => handleClick(todo.id)}
-                className={todo?.completed ? "completed" : ""}
+                className={todo.completed ? "completed" : ""}
               >
                 <div className="view">
-                  <input className="toggle" type="checkbox" />
+                  <input
+                    className="toggle"
+                    type="checkbox"
+                    checked={todo.completed}
+                  />
                   <label>{todo.text}</label>
                   <button className="destroy" onClick={() => remove(todo.id)} />
                 </div>
               </li>
             ))}
         </ul>
-        {/* <ul className="todo-list">
-          <li className="completed">
-            <div className="view">
-              <input className="toggle" type="checkbox" />
-              <label>Learn JavaScript</label>
-              <button className="destroy" />
-            </div>
-          </li>
-          <li>
-            <div className="view">
-              <input className="toggle" type="checkbox" />
-              <label>Learn React</label>
-              <button className="destroy" />
-            </div>
-          </li>
-          <li>
-            <div className="view">
-              <input className="toggle" type="checkbox" />
-              <label>Have a life!</label>
-              <button className="destroy" />
-            </div>
-          </li>
-        </ul> */}
       </section>
     </>
   );
