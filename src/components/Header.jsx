@@ -7,7 +7,7 @@ function Header() {
 
   const dispatch = useDispatch();
 
-  const addTodoList = (e) => {
+  const add = (e) => {
     e.preventDefault();
     dispatch(addTodo(todoInput));
     setTodoInput("");
@@ -17,7 +17,7 @@ function Header() {
     <>
       <header className="header">
         <h1>todos</h1>
-        <form onSubmit={(e) => addTodoList(e)}>
+        <form onSubmit={(e) => add(e)}>
           <input
             className="new-todo"
             placeholder="What needs to be done?"

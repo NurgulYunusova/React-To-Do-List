@@ -1,23 +1,39 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeTodo, toggleTodo } from "../store/slices/todosSlice";
 
 function Main() {
   const { todos } = useSelector((state) => state.todosReducer);
 
-  console.log("todos", todos);
+  const dispatch = useDispatch();
+
+  const remove = (id) => {
+    dispatch(removeTodo(id));
+  };
+
+  const handleClick = (index) => {
+    dispatch(toggleTodo(index));
+  };
+
+  console.log(todos);
 
   return (
     <>
       <section className="main">
         <input className="toggle-all" type="checkbox" />
         <label htmlFor="toggle-all">Mark all as complete</label>
-        <ul>
+
+        <ul className="todo-list">
           {todos &&
             todos.map((todo) => (
-              <li key={todo.id}>
+              <li
+                key={todo.id}
+                onClick={() => handleClick(todo.id)}
+                className={todo?.completed ? "completed" : ""}
+              >
                 <div className="view">
                   <input className="toggle" type="checkbox" />
                   <label>{todo.text}</label>
-                  <button className="destroy" />
+                  <button className="destroy" onClick={() => remove(todo.id)} />
                 </div>
               </li>
             ))}
